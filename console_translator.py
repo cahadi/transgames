@@ -3,7 +3,7 @@ import time
 
 translator = Translator()
 
-def translate_long_text(text, dest='ru', max_length=500):
+def translate_long_text(text, dest='ru', max_length=10000):
     sentences = text.split('. ')
     translated_parts = []
     
