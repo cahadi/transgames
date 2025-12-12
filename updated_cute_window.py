@@ -46,7 +46,7 @@ class ScreenTextRecognizer:
         self.setup_global_hotkeys()
         
     def setup_ui(self):
-        self.root.geometry("500x350+100+100")
+        self.root.minsize(600, 700)
         self.root.configure(bg=self.colors['bg_main'])
         
         self.main_frame = Frame(self.root, bg=self.colors['bg_frame'], relief=RAISED, bd=3,
@@ -58,7 +58,7 @@ class ScreenTextRecognizer:
         self.header_frame.pack(fill=X, padx=10, pady=(10, 5))
         
         self.title_label = Label(self.header_frame, 
-                                text="Ми-ми-ми",
+                                text="/// Ми-ми-ми ///",
                                 bg=self.colors['bg_frame'],
                                 fg=self.colors['text_dark'],
                                 font=("Comic Sans MS", 12, "bold"))
@@ -127,14 +127,18 @@ class ScreenTextRecognizer:
             self.root.update()
 
             x, y = pyautogui.position()
-            region = (max(0, x-200), max(0, y-100), 400, 200)
+            region = (max(0, x-700), # x верхнего левого угла
+                      max(0, y-300), # y верхнего левого угла
+                      700, # ширина области
+                      300 # высота области
+                      )
             screenshot = pyautogui.screenshot(region=region)
             
             text = pytesseract.image_to_string(screenshot, lang='rus+eng')
             
             if text.strip():
                 self.recognized_text = text.strip()
-                display_text = self.recognized_text[:400] + "..." if len(self.recognized_text) > 400 else self.recognized_text
+                display_text = self.recognized_text[:10000] + "..." if len(self.recognized_text) > 10000 else self.recognized_text
                 self.update_text(display_text)
                 
                 set_text_from_recognizer(self.recognized_text)
@@ -166,8 +170,8 @@ class ScreenTextRecognizer:
             self.update_text(f"Ошибка перевода:\n{str(e)}")
     
     def update_text(self, text):
-        if len(text) > 500:
-            text = text[:500] + "..."
+        if len(text) > 10000:
+            text = text[:10000] + "..."
         
         formatted_text = ' '.join(text.split())
         formatted_text = formatted_text.strip()
